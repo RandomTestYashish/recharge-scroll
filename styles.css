@@ -1,0 +1,38 @@
+/* Shell: the design is a 375 x 812 frame. It is scaled as a whole (never re-laid out) to fit other viewports. */
+:root { --w: 375px; --h: 812px; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: #e9edf3; font-family: Inter, system-ui, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
+.stage { position: fixed; inset: 0; display: grid; place-items: center; }
+.device {
+  width: var(--w); height: var(--dh, var(--h));
+  background: #fff; overflow: hidden; position: relative;
+  border-radius: 40px; box-shadow: 0 0 0 10px #111, 0 30px 80px rgba(0,0,0,.25);
+  transform: scale(var(--s, 1)); transform-origin: center;
+  flex: none;
+}
+.scroll { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.scroll::-webkit-scrollbar { display: none; }
+.fh { position: relative; width: var(--w); height: 2259px; background: #fff; }
+.fh, .fh * { -webkit-tap-highlight-color: transparent; }
+
+/* phones: the frame fills the screen edge to edge (still 375 design px wide, scaled) */
+.phone body { background: #fff; }
+.phone .device { border-radius: 0; box-shadow: none; transform-origin: top left; position: absolute; top: 0; left: 0; }
+.phone .stage { display: block; }
+
+/* tap feedback on the interactive parts */
+.tap { cursor: pointer; transition: transform .16s cubic-bezier(.2,.8,.2,1), filter .16s; }
+.tap:active, .tap.down { transform: scale(.96); filter: brightness(.96); }
+
+/* Hand-tuned to the Figma render (figma/reference.png); the exported code does not carry these:
+   - the two background circles behind MY HOME are layer-blurred in Figma (export has plain fills)
+   - the My Family title block renders 7px lower in Figma than its exported auto-layout gives */
+.glow { filter: blur(var(--glow, 28px)); }
+.sheet-text { transform: translateY(7px); }
+
+/* Offers carousel */
+.offers { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none; overscroll-behavior-x: contain; }
+.offers::-webkit-scrollbar { display: none; }
+.offers > :last-child { padding-right: 16px; box-sizing: content-box; }
+.offers > :last-child > * { scroll-snap-align: start; }
