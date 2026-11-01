@@ -13,7 +13,7 @@ const root = document.documentElement;
 })();
 
 // ---------- navigation: Manage Family -> Prepaid (Harshit) -> Recharge success -> back to Manage Family
-const screens = { family: document.getElementById('family'), prepaid: document.getElementById('prepaid'), success: document.getElementById('success') };
+const screens = { family: document.getElementById('family'), prepaid: document.getElementById('prepaid'), flow: document.getElementById('flow'), success: document.getElementById('success') };
 let current = 'family', successTimer;
 function scrollerOf(id) { return root.classList.contains('phone') ? null : screens[id].querySelector('.scroll'); }
 function go(id, how) {
@@ -27,6 +27,7 @@ function go(id, how) {
   const sc = scrollerOf(id); if (sc) sc.scrollTop = 0; else scrollTo(0, 0);
   current = id;
   clearTimeout(successTimer);
+  if (id === 'flow' && window.Flow) window.Flow.enter(1);
   if (id === 'success') {
     to.classList.add('play');
     successTimer = setTimeout(() => go('family', 'fade'), 2600);
@@ -35,9 +36,9 @@ function go(id, how) {
 
 // label -> where it goes
 const routes = [
-  { screen: 'family', match: t => t.startsWith('Pack Expired'), to: 'prepaid' },
-  { screen: 'family', match: t => t === 'Repeat Recharge', to: 'prepaid' },
-  { screen: 'family', match: t => t.startsWith('Harshit') && t.includes('199'), to: 'prepaid' },
+  { screen: 'family', match: t => t.startsWith('Pack Expired'), to: 'flow' },
+  { screen: 'family', match: t => t === 'Repeat Recharge', to: 'flow' },
+  { screen: 'family', match: t => t.startsWith('Harshit') && t.includes('199'), to: 'flow' },
   { screen: 'prepaid', match: t => /^Recharge ₹/.test(t) || t === 'Buy', to: 'success' },
 ];
 
@@ -53,6 +54,7 @@ function boxOf(el, stop) {   // nearest ancestor that paints a button/card
 const labels = ['Add member', 'Repeat Recharge', 'Add Now', 'View all', 'Track Request', 'Add family member',
   'Poornima (You)', 'Harshit', '014547154467_dsl', 'Having an issue?', 'Recharge ₹', 'Buy', 'Pack Details'];
 Object.entries(screens).forEach(([id, sec]) => {
+  if (id === 'flow') return;               // flow.js handles its own input
   const hidden = !sec.classList.contains('active');
   if (hidden) sec.style.cssText = 'display:block;visibility:hidden';   // measure hidden screens too
   const frame = sec.querySelector('.fh > div');                          // never treat the whole screen as a button
@@ -97,7 +99,7 @@ dev.addEventListener('click', e => {
   const t = e.target.closest('[data-go]'); if (!t) return;
   e.preventDefault();
   const to = t.dataset.go;
-  if (to === 'back') go('family', 'back'); else go(to);
+  if (to === 'back') go('family', 'back'); else go(to, to === 'flow' ? 'fade' : undefined);
 });
 screens.success.addEventListener('click', () => go('family', 'fade'));
 
@@ -106,3 +108,7 @@ const halo = screens.success.querySelector('img[src$="imgEllipse18997.svg"]');
 const check = screens.success.querySelector('img[src$="imgCheckCircle.svg"]');
 if (halo) halo.parentElement.classList.add('halo');
 if (check) { check.parentElement.classList.add('tick'); const disc = screens.success.querySelector('[style*="rgb(1, 101, 40)"]'); if (disc) disc.classList.add('tick'); }
+
+// recharge flow hooks (flow.js)
+window.flowExit = () => go('family', 'fade');
+window.flowPaid = () => go('success', 'fade');

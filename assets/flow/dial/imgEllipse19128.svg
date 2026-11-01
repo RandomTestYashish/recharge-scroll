@@ -1,0 +1,27 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="456.179" height="456.179" viewBox="0 0 456.179 456.179" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="Ellipse 19128" filter="url(#filter0_d_0_332)">
+<use xlink:href="#stroke0_0_332" fill="url(#paint0_linear_0_332)" shape-rendering="crispEdges"/>
+<mask id="stroke1_0_332" maskUnits="userSpaceOnUse" x="50" y="46" width="357" height="357" fill="black">
+<rect fill="white" x="50" y="46" width="357" height="357"/>
+<use xlink:href="#stroke0_0_332"/>
+</mask>
+<path d="M405.179 224.089C405.179 321.893 325.893 401.179 228.089 401.179C130.286 401.179 51 321.893 51 224.089C51 126.286 130.286 47 228.089 47C325.893 47 405.179 126.286 405.179 224.089Z" stroke-width="2" stroke="white" shape-rendering="crispEdges" mask="url(#stroke1_0_332)"/>
+</g>
+<defs>
+<filter id="filter0_d_0_332" x="0" y="0" width="456.179" height="456.179" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="25"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.0293463 0 0 0 0 0.369509 0 0 0 0 0.911084 0 0 0 0.1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_332"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_332" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear_0_332" x1="125.631" y1="86.8688" x2="228.089" y2="446.55" gradientUnits="userSpaceOnUse">
+<stop stop-color="#D9E7FC" stop-opacity="0.8"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+<path id="stroke0_0_332" d="M405.179 224.089C405.179 321.893 325.893 401.179 228.089 401.179C130.286 401.179 51 321.893 51 224.089C51 126.286 130.286 47 228.089 47C325.893 47 405.179 126.286 405.179 224.089Z"/>
+</defs>
+</svg>

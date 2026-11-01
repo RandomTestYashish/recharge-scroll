@@ -1,0 +1,62 @@
+/* Recharge flow (contact dial -> packs). Layers sit at their Figma positions; flow.js drives every transform/opacity. */
+#flow .fh { height: 812px; background: #fff; overflow: hidden; }
+.flow-stage { position: absolute; left: 0; top: 0; width: 375px; height: 812px; overflow: hidden; background: #fff;
+  touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.flow-stage .L { position: absolute; inset: 0; pointer-events: none; will-change: transform, opacity; }
+.flow-stage .L a, .flow-stage .L [data-act], .flow-stage .card, .flow-stage .av, .flow-stage .bk-list, .flow-stage .kb-key { pointer-events: auto; }
+.flow-stage .L[inert] * { pointer-events: none !important; }
+.flow-stage img { -webkit-user-drag: none; user-select: none; }
+.flow-stage a { cursor: pointer; }
+
+/* aperture: whole dial and its four tick rings rotate about the dial centre */
+.flow-stage .apw, .flow-stage .apr { transform-origin: 187.6px 704.5px; will-change: transform; }
+
+/* contact name: two slots cross-fade (with blur) while the dial turns */
+#L-name .nm-slot { position: absolute; left: 0; top: 0; width: 375px; will-change: opacity, filter, transform; }
+#L-name .nm-name { position: absolute; left: 188px; top: 178.35px; transform: translate(-50%, -50%); font: 800 24px/18px Inter, sans-serif;
+  letter-spacing: .48px; color: #000; white-space: nowrap; }
+#L-name .nm-num { position: absolute; left: 187.5px; top: 207.35px; transform: translate(-50%, -50%); font: 400 14px/18px Inter, sans-serif;
+  letter-spacing: .28px; color: rgba(0,0,0,.5); white-space: nowrap; }
+
+/* avatars on the arc */
+.av { position: absolute; left: 0; top: 0; width: 124px; height: 124px; border-radius: 50%; transform-origin: 0 0; will-change: transform; }
+.av-bg { position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(#fff, #e6f0ff); }
+.av-ring { position: absolute; inset: 0; width: 100%; height: 100%; }
+.av-photo { position: absolute; border-radius: 50%; overflow: hidden; }
+.av-photo img { position: absolute; max-width: none; object-fit: cover; }
+.av-pad { position: absolute; inset: 0; width: 100%; height: 100%; }
+.av-padc { position: absolute; border-radius: 50%; background: radial-gradient(circle at 50% 35%, #fff 55%, #eef3ff); box-shadow: inset 0 0 0 1px rgba(213,219,222,.5); }
+.av-padc svg { position: absolute; left: 50%; top: 50%; width: 30%; height: 38%; transform: translate(-50%, -50%); }
+
+/* card stack */
+.cards-wrap { position: absolute; inset: 0; transform-origin: 187.5px 415px; }
+.card { position: absolute; left: 34px; top: 213.54px; width: 307px; height: 403px; transform-origin: 50% 100%; will-change: transform; }
+.card-face > * { opacity: var(--c, 1); }
+.card-cta, .flow-stage [data-act] { transition: transform .16s cubic-bezier(.2,.8,.2,1), filter .16s; }
+.flow-stage .press { transform: scale(.95); filter: brightness(.94); }
+.card-cta.press { transform: scale(.97); }
+
+/* header toggle (Enter Number | Phonebook) */
+.tg a { color: #696b6f; transition: color .25s; }
+.tg a img { filter: brightness(0); opacity: .45; transition: opacity .25s, filter .25s; }
+.tg[data-on="enter"] .tg-enter, .tg[data-on="book"] .tg-book { color: #fff; }
+.tg[data-on="enter"] .tg-enter img, .tg[data-on="book"] .tg-book img { opacity: 1; filter: brightness(0) invert(1); }
+
+/* phonebook */
+.bk-row { transition: background .15s; }
+.bk-row.press { transform: none; background: #f2f5fa; filter: none; }
+.bk-text { color: #000; }
+.bk-caret { display: inline-block; width: 1.5px; height: 14px; background: #075ee8; margin-left: 1px; vertical-align: -2px; animation: caret 1s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+.bk-mode a { color: #000; transition: color .2s; }
+.bk-mode[data-on="abc"] .bk-abc, .bk-mode[data-on="123"] .bk-123 { color: #fff; }
+.bk-knob { transition: left .28s cubic-bezier(.3,.7,.2,1), width .28s cubic-bezier(.3,.7,.2,1); }
+.bk-mode[data-on="123"] .bk-knob { left: 51px; width: 40px; }
+.kb-key.press, #L-numkb .press { transform: none; filter: brightness(.82); }
+
+/* bank offers / quick pay backdrop */
+#L-scrim a { display: block; }
+
+/* iOS keyboards: system font like the Figma (SF Pro) */
+#L-numkb, #L-alphakb { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Inter, sans-serif; }
+#L-numkb p { font-family: inherit !important; }

@@ -15,6 +15,11 @@ def inline(m):
 for _ in range(3):
     src = re.sub(r'<(' + '|'.join(helpers) + r')(\s+className="([^"]*)")?\s*/>', inline, src) if helpers else src
 
+# boolean props default to true in the exported helpers: keep the conditional block's content
+src = re.sub(r'\{\w+ && \(\n(.*?)\n\s*\)\}', r'\1', src, flags=re.S)
+# SF Symbols have no web equivalent: draw the one Figma uses here (keyboard delete key)
+src = re.sub(r'<SFSymbol>\{`Image\(systemName: "delete.left"\)`\}</SFSymbol>',
+  '<svg width="23" height="17" viewBox="0 0 23 17" fill="none"><path d="M7.2 1h13.3A1.5 1.5 0 0 1 22 2.5v12a1.5 1.5 0 0 1-1.5 1.5H7.2L1 8.5 7.2 1Z" stroke="black" stroke-width="1.6" stroke-linejoin="round"/><path d="m11 5.5 6 6m0-6-6 6" stroke="black" stroke-width="1.6" stroke-linecap="round"/></svg>', src)
 lines = src.split('\n')
 a = next(i for i, l in enumerate(lines) if l.startswith('export default function'))
 body = '\n'.join(lines[a + 2:])
@@ -22,7 +27,7 @@ s = body[:body.rindex(');')]
 
 WEIGHT = {'bold': 'font-bold', '700': 'font-bold', 'semibold': 'font-semibold', 'semi_bold': 'font-semibold', '600': 'font-semibold',
           'medium': 'font-medium', '500': 'font-medium', 'regular': 'font-normal', '400': 'font-normal',
-          'bold_italic': 'font-bold italic', 'medium_italic': 'font-medium italic', 'semibold_italic': 'font-semibold italic',
+          'bold_italic': 'font-bold italic', 'medium_italic': 'font-medium italic', 'semibold_italic': 'font-semibold italic', 'semi_bold_italic': 'font-semibold italic',
           'black_italic': 'font-black italic', 'extra_bold_italic': 'font-extrabold italic', 'extra_bold': 'font-extrabold',
           'black': 'font-black', '800': 'font-extrabold', '900': 'font-black', 'italic': 'font-normal italic'}
 
@@ -52,7 +57,12 @@ def style(m):  # JSX style object -> CSS (values may be "..", '..' or `..` strin
     return 'style="' + ';'.join(out).replace('&', '&amp;').replace('"', '&quot;').replace('<', '&lt;').replace('>', '&gt;') + '"'
 
 s = re.sub(r'\{/\*.*?\*/\}', '', s)
-s = re.sub(r'\s*data-(?:node-id|name|annotations)="[^"]*"', '', s)
+import os
+if os.environ.get('KEEP_IDS'):   # keep node ids (as data-n) so build scripts can pick layers out
+    s = re.sub(r'\s*data-(?:name|annotations)="[^"]*"', '', s)
+    s = re.sub(r'data-node-id="([^"]*)"', r'data-n="\1"', s)
+else:
+    s = re.sub(r'\s*data-(?:node-id|name|annotations)="[^"]*"', '', s)
 s = re.sub(r'className="([^"]*)"', lambda m: f'class="{fix_classes(m.group(1))}"', s)
 s = re.sub(r'src=\{(\w+)\}', lambda m: f'src="{adir}/{m.group(1)}.{consts[m.group(1)]}"', s)
 s = re.sub(r'style=\{\{ ((?:"(?:\\.|[^"\\])*"|`[^`]*`|[^"`}])*?) \}\}', style, s)
@@ -68,6 +78,11 @@ def mask_defaults(m):
     if 'mask-image:url(' in tag and tag.split('mask-image:')[1].split('"')[0].count('url(') > 1 and 'mask-intersect' not in tag: add.append('mask-intersect')
     return tag.replace('class="', 'class="' + ' '.join(add) + ' ', 1) if add else tag
 s = re.sub(r'<div [^>]*>', mask_defaults, s)
+# whitespace-pre text: the JSX source indentation is not content
+def pre_text(m):
+    return m.group(1) + re.sub(r'\s*\n\s*', '', m.group(2)) + m.group(3)
+s = re.sub(r'(<p [^>]*whitespace-pre[^>]*>)(.*?)(</p>)', pre_text, s, flags=re.S)
+s = re.sub(r'</span>\s+<span', '</span><span', s)
 left = re.findall(r'\{[^}]*\}', s)
 if left: print('LEFTOVER JSX:', left[:8], file=sys.stderr)
 print(s)

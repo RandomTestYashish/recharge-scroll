@@ -53,6 +53,11 @@ bar, pre = take(pre, 'bottom-0 drop-shadow-[0px_4px_6.5px_rgba(133,140,143,0.1)]
 bar = replace1(bar, 'bottom-0 drop-shadow', 'top-0 drop-shadow')
 pre = replace1(pre, '<a class="absolute block cursor-pointer left-[15.5px] size-[40px] top-[77.5px]">', '<a class="absolute block cursor-pointer left-[15.5px] size-[40px] top-[77.5px] tap" data-go="back" aria-label="Back">')
 
+# ---- Recharge flow (contact dial, packs, quick pay, enter number, phonebook, bank offers): figma/flow_build.py
+sys.path.insert(0, fig)
+import flow_build
+flow = flow_build.flow_html()
+
 # ---- Recharge success
 suc = convert('success.jsx', 'assets/success')
 suc = replace1(suc, '<div class="bg-[#f5f6fa] relative size-full">', '<div class="bg-[#f5f6fa] relative w-[375px] h-[812px] overflow-hidden">')
@@ -72,6 +77,13 @@ screens = f'''    <section class="screen active" id="family" aria-label="Manage 
       </div>
       <div class="dock">
 {indent(bar, 8)}
+      </div>
+    </section>
+    <section class="screen" id="flow" aria-label="Recharge for a family member">
+      <div class="scroll">
+        <div class="fh">
+{indent(flow, 10)}
+        </div>
       </div>
     </section>
     <section class="screen" id="success" aria-label="Recharge successful">
