@@ -1,27 +1,48 @@
-/* Shell: the design is a 375 x 812 frame. It is scaled as a whole (never re-laid out) to fit other viewports. */
+/* Shell: every screen is a 375 x 812 design frame. Other viewports scale the frame as a whole, never re-lay it out. */
 :root { --w: 375px; --h: 812px; }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; }
 body { background: #e9edf3; font-family: Inter, system-ui, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
 .stage { position: fixed; inset: 0; display: grid; place-items: center; }
 .device {
-  width: var(--w); height: var(--dh, var(--h));
+  width: var(--w); height: var(--h); flex: none;
   background: #fff; overflow: hidden; position: relative;
   border-radius: 40px; box-shadow: 0 0 0 10px #111, 0 30px 80px rgba(0,0,0,.25);
   transform: scale(var(--s, 1)); transform-origin: center;
-  flex: none;
 }
-.scroll { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.screen { position: absolute; inset: 0; display: none; background: #fff; }
+.screen.active { display: block; }
+.scroll { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; scrollbar-width: none; }
 .scroll::-webkit-scrollbar { display: none; }
-.fh { position: relative; width: var(--w); height: 2259px; background: #fff; }
-.fh, .fh * { -webkit-tap-highlight-color: transparent; }
+.fh { position: relative; width: var(--w); background: #fff; overflow-x: clip; }
+.fh, .fh * , .dock * { -webkit-tap-highlight-color: transparent; }
+.dock { position: absolute; left: 0; bottom: 0; width: var(--w); height: 97px; z-index: 5; overflow: hidden; }
+#success .fh { background: #f5f6fa; }
 
 /* phones: the page itself scrolls (native, most reliable on iOS). The frame is still 375 design px,
    scaled with zoom so the scaled height is real layout height. */
 .phone, .phone body { height: auto; overflow: visible; background: #fff; }
 .phone .stage { position: static; display: block; }
-.phone .device { zoom: var(--s); transform: none; height: auto; overflow: visible; border-radius: 0; box-shadow: none; }
+.phone .device { zoom: var(--s); transform: none; height: auto; min-height: calc(100vh / var(--s)); overflow: visible; border-radius: 0; box-shadow: none; }
+.phone .screen { position: relative; inset: auto; }
 .phone .scroll { position: static; overflow: visible; }
+.phone .dock { position: fixed; }
+.phone #success .fh { height: calc(100vh / var(--s)) !important; }
+
+/* screen transitions */
+/* children are animated, not the section: a transform left on the section would re-anchor the fixed dock on phones */
+.screen.in-right > * { animation: inRight .38s cubic-bezier(.2,.8,.2,1) backwards; }
+.screen.in-left > * { animation: inLeft .38s cubic-bezier(.2,.8,.2,1) backwards; }
+.screen.in-fade > * { animation: inFade .3s ease backwards; }
+@keyframes inRight { from { transform: translateX(100%); } to { transform: none; } }
+@keyframes inLeft { from { transform: translateX(-28%); opacity: .6; } to { transform: none; opacity: 1; } }
+@keyframes inFade { from { opacity: 0; } to { opacity: 1; } }
+
+/* recharge success: halo and check pop in */
+#success.play .halo { animation: halo .7s cubic-bezier(.2,.9,.3,1.2) both; }
+#success.play .tick { animation: tick .55s .2s cubic-bezier(.3,1.6,.5,1) both; }
+@keyframes halo { from { scale: .3; opacity: 0; } to { scale: 1; opacity: 1; } }
+@keyframes tick { from { scale: 0; } to { scale: 1; } }
 
 /* tap feedback on the interactive parts */
 .tap { cursor: pointer; transition: transform .16s cubic-bezier(.2,.8,.2,1), filter .16s; }
