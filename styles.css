@@ -16,10 +16,12 @@ body { background: #e9edf3; font-family: Inter, system-ui, sans-serif; overflow:
 .fh { position: relative; width: var(--w); height: 2259px; background: #fff; }
 .fh, .fh * { -webkit-tap-highlight-color: transparent; }
 
-/* phones: the frame fills the screen edge to edge (still 375 design px wide, scaled) */
-.phone body { background: #fff; }
-.phone .device { border-radius: 0; box-shadow: none; transform-origin: top left; position: absolute; top: 0; left: 0; }
-.phone .stage { display: block; }
+/* phones: the page itself scrolls (native, most reliable on iOS). The frame is still 375 design px,
+   scaled with zoom so the scaled height is real layout height. */
+.phone, .phone body { height: auto; overflow: visible; background: #fff; }
+.phone .stage { position: static; display: block; }
+.phone .device { zoom: var(--s); transform: none; height: auto; overflow: visible; border-radius: 0; box-shadow: none; }
+.phone .scroll { position: static; overflow: visible; }
 
 /* tap feedback on the interactive parts */
 .tap { cursor: pointer; transition: transform .16s cubic-bezier(.2,.8,.2,1), filter .16s; }

@@ -5,10 +5,8 @@
     const vw = window.innerWidth, vh = window.innerHeight;
     const phone = vw <= 520 && matchMedia('(pointer: coarse), (max-width: 520px)').matches;
     root.classList.toggle('phone', phone);
-    if (phone) {               // full width; the frame gets taller/shorter to fill the screen height
-      const s = vw / W;
-      root.style.setProperty('--s', s);
-      root.style.setProperty('--dh', (vh / s) + 'px');
+    if (phone) {               // full width, page scrolls natively
+      root.style.setProperty('--s', vw / W);
     } else {                   // desktop: whole 375 x 812 frame visible
       root.style.setProperty('--s', Math.min(1, (vh - 48) / (H + 20), (vw - 48) / (W + 20)));
       root.style.setProperty('--dh', H + 'px');
