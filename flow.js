@@ -1,4 +1,4 @@
-// Recharge flow, built from scratch: contact dial with a real iris aperture -> packs deck -> quick pay -> success,
+// Recharge flow, built from scratch: contact dial -> packs deck -> quick pay -> success,
 // plus Enter Number keypad, Phonebook search, Bank Offers, pack details and relation picker.
 // Layout follows the Figma frames (375 x 812); every component here is hand-made. One render() draws the state.
 (function () {
@@ -132,13 +132,6 @@
     <div class="dial pass" id="dial">
       <div class="dial-disc"></div>
       <div class="dial-inner"></div>
-      <svg class="dial-iris" id="iris" viewBox="0 0 354 354">
-        <defs>
-          <clipPath id="irisClip"><circle cx="177" cy="177" r="176"/></clipPath>
-          <radialGradient id="irisShade" cx=".5" cy=".5" r=".5"><stop offset=".55" stop-color="#9fb4e0" stop-opacity="0"/><stop offset="1" stop-color="#9fb4e0" stop-opacity=".35"/></radialGradient>
-        </defs>
-        <g clip-path="url(#irisClip)" id="blades"></g>
-      </svg>
       <div class="dial-ticks"><canvas id="ticks" width="970" height="970"></canvas></div>
     </div>
     <div class="fadeb pass"></div>
@@ -228,7 +221,7 @@
   })();
 
   // ================================================================ state + animation engine
-  const S = { p: 1, pk: 0, kb: 0, bk: 0, num: 0, bank: 0, quick: 0, det: 0, ok: 0, menu: 0, intro: 1, c: 0, cd: 0, close: 0, shut: 0, deckIn: 1 };
+  const S = { p: 1, pk: 0, kb: 0, bk: 0, num: 0, bank: 0, quick: 0, det: 0, ok: 0, menu: 0, intro: 1, c: 0, cd: 0, shut: 0, deckIn: 1 };
   const anims = {};
   let raf = 0, lastT = performance.now(), springTo = null, vel = 0, dragging = false;
   function tween(k, to, dur = 450, fn = ease, done) {
@@ -241,16 +234,14 @@
     raf = 0; const dt = Math.min(.05, (t - lastT) / 1000); lastT = t; let busy = false;
     for (const k in anims) { const a = anims[k]; if (!a) continue; const u = clamp((t - a.t0) / a.dur, 0, 1); S[k] = lerp(a.from, a.to, a.fn(u)); if (u >= 1) { anims[k] = null; a.done && a.done(); } else busy = true; }
     if (springTo !== null) {
-      const K = 160, D = 2 * Math.sqrt(K) * .9, prev = S.p;
+      const K = 160, D = 2 * Math.sqrt(K) * .9;
       vel += (-(S.p - springTo) * K - vel * D) * dt; S.p += vel * dt;
-      S.close = Math.max(S.close, clamp(Math.abs(S.p - prev) / Math.max(dt, .001) * .5, 0, 1));
       if (Math.abs(S.p - springTo) < .001 && Math.abs(vel) < .01) { S.p = springTo; springTo = null; vel = 0; settled(); } else busy = true;
     }
-    if (!dragging && springTo === null && S.close > 0) { S.close = Math.max(0, S.close - dt * 2.6); busy = true; }   // iris opens back up
     render(); if (busy) kick();
   }
 
-  // ================================================================ aperture: tick ring + iris blades
+  // ================================================================ tick ring
   const tc = $('#ticks'), tctx = tc.getContext('2d');
   (function drawTicks() {
     const k = 2, c = 242.5 * k; tctx.lineCap = 'round';
@@ -262,26 +253,6 @@
       tctx.beginPath(); tctx.moveTo(c + Math.cos(a) * r1, c + Math.sin(a) * r1); tctx.lineTo(c + Math.cos(a) * r2, c + Math.sin(a) * r2); tctx.stroke();
     }
   })();
-  // Iris: NB blades. Blade i is the half-plane beyond a line tangent to the opening circle (radius ro); the free
-  // space left in the middle is the regular NB-gon you see in a lens. Each blade has its own gradient running away
-  // from its cutting edge, a light cutting edge and a soft shadow cast on the blade under it.
-  const NB = 7, blades = $('#blades'), defs = $('#iris defs');
-  defs.insertAdjacentHTML('beforeend', Array.from({ length: NB }, (_, i) => `<linearGradient id="bl${i}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f4f7ff"/><stop offset=".22" stop-color="#d3ddf3"/><stop offset=".7" stop-color="#a9bbe1"/><stop offset="1" stop-color="#93a8d6"/></linearGradient>`).join('') +
-    '<filter id="blsh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#3d5288" flood-opacity=".45"/></filter>');
-  blades.innerHTML = Array.from({ length: NB }, (_, i) => `<g filter="url(#blsh)"><path fill="url(#bl${i})" stroke="rgba(62,86,140,.55)" stroke-width=".9" stroke-linejoin="round"/><path class="edge" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".95"/></g>`).join('') +
-    '<circle cx="177" cy="177" r="176" fill="url(#irisShade)"/>';
-  const bladeEls = $$('g > path:first-child', blades), edgeEls = $$('.edge', blades), grads = Array.from({ length: NB }, (_, i) => $('#bl' + i));
-  function iris(ro, twist) {
-    const c = 177, L = 420, half = ro * Math.tan(Math.PI / NB);
-    bladeEls.forEach((el, i) => {
-      const a = twist + i * 2 * Math.PI / NB, nx = Math.cos(a), ny = Math.sin(a), tx = -ny, ty = nx;
-      const Tx = c + nx * ro, Ty = c + ny * ro;
-      const p0 = [Tx - tx * half, Ty - ty * half], p1 = [Tx + tx * L, Ty + ty * L], p2 = [p1[0] + nx * L, p1[1] + ny * L], p3 = [p0[0] + nx * L, p0[1] + ny * L];
-      el.setAttribute('d', `M${p0}L${p1}L${p2}L${p3}Z`);
-      edgeEls[i].setAttribute('d', `M${p0}L${p1}`);
-      const g = grads[i]; g.setAttribute('x1', Tx); g.setAttribute('y1', Ty); g.setAttribute('x2', Tx + nx * 120); g.setAttribute('y2', Ty + ny * 120);
-    });
-  }
 
   // ================================================================ avatars
   const avs = contacts.map((c, i) => {
@@ -333,7 +304,7 @@
 
   // ================================================================ render
   const css = (el, o, tr) => { el.style.opacity = o; el.style.transform = tr || ''; };
-  const dialEl = $('#dial'), segKnob = $('#segKnob'), dotsEl = $('#dots'), irisEl = $('#iris'), disc = $('.dial-disc'), inner = $('.dial-inner'), goBtn = $('.go');
+  const dialEl = $('#dial'), segKnob = $('#segKnob'), dotsEl = $('#dots'), disc = $('.dial-disc'), inner = $('.dial-inner'), goBtn = $('.go');
   const dialBits = $$('.needle, .needle-tip, .go-label, .fadeb, .hint', Y.dial);
   let lastRot = 0, tickAcc = 0;
   function render() {
@@ -356,13 +327,11 @@
     css(Y.rel, (1 - e) * d1 * clamp(intro * 2.4 - 1.2, 0, 1), '');
     $('#relTxt').textContent = rels[Math.round(p)] || 'Add relation';
 
-    // dial + aperture: ticks turn 22.5deg per contact; the iris stops down while turning and opens when it settles
+    // dial: ticks turn 22.5deg per contact
     const rot = -(p - 1) * 22.5;
     tc.style.transform = `rotate(${rot}deg)`;
     dialEl.style.transform = `translate(${1.6 * pk}px, ${274 * pk + rise}px)`;
-    disc.style.opacity = inner.style.opacity = irisEl.style.opacity = d1;
-    const ro = Math.min(lerp(156, 86, easeIO(clamp(S.close, 0, 1))), lerp(156, 0, easeIO(S.shut)));
-    if (ro < 177.5) { blades.style.display = ''; iris(ro, rot * Math.PI / 180 * .6 + (156 - ro) / 156 * 1.2); } else blades.style.display = 'none';
+    disc.style.opacity = inner.style.opacity = d1;
     dialBits.forEach(el => css(el, d1 * (el.matches('.hint, .go-label') ? clamp(1 - S.shut * 2, 0, 1) : 1), `translateY(${rise + 250 * pk}px)`));
     css(goBtn, d1 * clamp(1 - S.shut * 1.6, 0, 1), `translateY(${rise + 250 * pk}px) scale(${1 - S.shut * .35})`);
     tickAcc += rot - lastRot; lastRot = rot;
@@ -443,7 +412,7 @@
     $('#phName').textContent = c.pad ? '+91 ' + typed : c.name; $('#phNum').textContent = c.pad ? 'Prepaid' : '+91 ' + c.num;
     if (S.kb > 0) tween('kb', 0, 220);
     closeMenu(); setTab('rec', true);
-    // shutter: the blades sweep shut over the button, then open onto the packs
+    // the button shrinks away, then the packs open
     hapt('heavy');
     tween('shut', 1, 260, easeIO, () => { hapt('snap'); tween('pk', 1, 620, easeIO); tween('shut', 0, 520, ease); });
   }
@@ -525,7 +494,6 @@
     if (kind === 'dial') {
       let np = p0 - dx / 113; const max = contacts.length - 1;
       if (np < 0) np = -Math.pow(-np, .6) * .3; if (np > max) np = max + Math.pow(np - max, .6) * .3;
-      S.close = clamp(S.close + Math.abs(np - S.p) * 3, 0, 1);   // the iris stops down while the dial turns
       S.p = np;
     } else if (kind === 'card') S.cd = -dx / 440;
     else if (kind === 'sheet') S[sheetK] = clamp(1 - Math.max(0, dy) / 520, 0, 1);
@@ -606,7 +574,7 @@
     state: S, render,
     enter(i = 1) {
       for (const k in anims) anims[k] = null; springTo = null; vel = 0; clearTimeout(okT);
-      Object.assign(S, { pk: 0, kb: 0, bk: 0, num: 0, bank: 0, quick: 0, det: 0, ok: 0, menu: 0, cd: 0, close: 0, shut: 0, deckIn: 1, intro: 0, p: i + .9 });
+      Object.assign(S, { pk: 0, kb: 0, bk: 0, num: 0, bank: 0, quick: 0, det: 0, ok: 0, menu: 0, cd: 0, shut: 0, deckIn: 1, intro: 0, p: i + .9 });
       query = ''; renderList(); setKb('abc'); setTab('rec', true); kbClosed = false; applied = null;
       $$('.offer.open').forEach(x => { x.classList.remove('open'); $('.offer-more', x).style.height = '0px'; });
       lastRot = -(S.p - 1) * 22.5; tickAcc = 0; render();

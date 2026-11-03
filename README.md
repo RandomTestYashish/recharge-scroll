@@ -11,8 +11,6 @@
 Manage Family → "Pack Expired" / "Repeat Recharge" → contact dial → packs → Quick Pay → success. Figma frames are the layout
 reference only; every component is hand-made in `flow.js` + `flow.css` (no Figma export). Images live in `assets/rc/`.
 - Contact dial: swipe one contact at a time; the tick ring turns 22.5° per contact with a haptic tick every 2.5°.
-- Aperture: a 7-blade iris (SVG) sits in the dial. It stops down while the dial turns, opens when it settles, and shuts
-  like a camera shutter before the packs open.
 - Dial-pad item = Enter Number (keypad, 10-digit check); search / Phonebook tab = contact search with ABC/123 keyboards.
 - Packs: tabs (Recommended, Top data, International), swipeable card deck, pack details sheet, Quick Pay, Bank Offers
   (expandable, "apply on next payment"), relation picker on the dial.

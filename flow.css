@@ -72,7 +72,6 @@
 .dial-ticks { position: absolute; left: 0; top: 0; width: 485px; height: 485px;
   -webkit-mask: linear-gradient(#000 0%, #000 20%, rgba(0,0,0,.4) 36%, transparent 50%); mask: linear-gradient(#000 0%, #000 20%, rgba(0,0,0,.4) 36%, transparent 50%); }
 .dial-ticks canvas { position: absolute; left: 0; top: 0; width: 485px; height: 485px; transform-origin: 242.5px 242.5px; will-change: transform; }
-.dial-iris { position: absolute; left: 65.5px; top: 65.5px; width: 354px; height: 354px; }
 .needle { position: absolute; left: 186.75px; top: 484px; width: 1.5px; height: 134px; background: linear-gradient(#292c31, rgba(41,44,49,.5)); }
 .needle-tip { position: absolute; left: 181.5px; top: 476px; }
 .go { position: absolute; left: 150px; top: 617px; width: 75px; height: 75px; border-radius: 50%;
