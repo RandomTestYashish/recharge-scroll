@@ -53,10 +53,8 @@ bar, pre = take(pre, 'bottom-0 drop-shadow-[0px_4px_6.5px_rgba(133,140,143,0.1)]
 bar = replace1(bar, 'bottom-0 drop-shadow', 'top-0 drop-shadow')
 pre = replace1(pre, '<a class="absolute block cursor-pointer left-[15.5px] size-[40px] top-[77.5px]">', '<a class="absolute block cursor-pointer left-[15.5px] size-[40px] top-[77.5px] tap" data-go="back" aria-label="Back">')
 
-# ---- Recharge flow (contact dial, packs, quick pay, enter number, phonebook, bank offers): figma/flow_build.py
-sys.path.insert(0, fig)
-import flow_build
-flow = flow_build.flow_html()
+# ---- Recharge flow: hand-built components rendered by flow.js into this stage (no Figma export)
+flow = '<div class="flow-stage" id="flowStage"></div>'
 
 # ---- Recharge success
 suc = convert('success.jsx', 'assets/success')

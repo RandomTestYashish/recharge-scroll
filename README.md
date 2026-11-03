@@ -7,8 +7,13 @@
 - `styles.css` = device shell + the few hand-tuned overrides; `app.js` = viewport scaling, tap feedback, offers carousel.
 - `figma/reference.png` is the Figma render used for comparison.
 
-## Recharge flow (from the reference video)
-Manage Family → "Pack Expired" / "Repeat Recharge" → contact dial (Figma 81554:160472 …) → packs (81554:154187 …) → Quick Pay → success.
-- `figma/flow_build.py` assembles the screen from Figma layers (`figma/dial.jsx`, `figma/packs.jsx`) plus templated pack cards, phonebook and keyboard.
-- `flow.js` animates it: swipe the dial (aperture ring turns 22.5° per contact, rings fan out and settle, haptic tick every 7.5°), dial-pad = Enter Number with keypad, search/Phonebook tab, Bank Offers sheet, card stack swipe, Quick Pay.
-- Haptics: `navigator.vibrate` on Android; on iOS 18+ Safari via the `<input switch>` trick.
+## Recharge flow (rebuilt from scratch)
+Manage Family → "Pack Expired" / "Repeat Recharge" → contact dial → packs → Quick Pay → success. Figma frames are the layout
+reference only; every component is hand-made in `flow.js` + `flow.css` (no Figma export). Images live in `assets/rc/`.
+- Contact dial: swipe one contact at a time; the tick ring turns 22.5° per contact with a haptic tick every 2.5°.
+- Aperture: a 7-blade iris (SVG) sits in the dial. It stops down while the dial turns, opens when it settles, and shuts
+  like a camera shutter before the packs open.
+- Dial-pad item = Enter Number (keypad, 10-digit check); search / Phonebook tab = contact search with ABC/123 keyboards.
+- Packs: tabs (Recommended, Top data, International), swipeable card deck, pack details sheet, Quick Pay, Bank Offers
+  (expandable, "apply on next payment"), relation picker on the dial.
+- Haptics: `navigator.vibrate` on Android; iOS 18+ Safari via the `<input switch>` trick.
