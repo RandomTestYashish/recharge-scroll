@@ -106,11 +106,11 @@
     if (c.look) return `<div class="card-f">
       <img class="lk-q" alt="" src="${A}question.png">
       <div class="lk-title">Looking for<br>other plans?</div>
-      <div class="lk-sub">Which type of plans you want<br>to see?</div>
+      <div class="lk-sub">Which type of plans do you<br>want to see?</div>
       <div class="lk-tiles">
-        <button class="lk-tile" data-act="tab" data-tab="intl">International<br>roaming Packs${sv(56, 56, `<defs><radialGradient id="glb" cx=".35" cy=".3" r=".8"><stop stop-color="#c9b8ff"/><stop offset="1" stop-color="#6a4df5"/></radialGradient></defs><circle cx="28" cy="28" r="20" fill="url(#glb)"/><path d="M8 28h40M28 8c6 6 6 34 0 40M28 8c-6 6-6 34 0 40M12 18h32M12 38h32" stroke="#fff" stroke-opacity=".55" stroke-width="1.4"/>`)}</button>
-        <button class="lk-tile" data-act="tab" data-tab="data">Data Topup<br>Packs${sv(56, 56, `<defs><linearGradient id="dtp" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#7fb2ff"/><stop offset="1" stop-color="#2f6df6"/></linearGradient></defs><rect x="10" y="12" width="32" height="34" rx="8" fill="url(#dtp)"/><path d="M26 38V22m-6 6 6-6 6 6" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M46 20v-4M50 20v-8" stroke="#2f6df6" stroke-width="2.4" stroke-linecap="round"/>`)}</button>
-        <button class="lk-tile" data-act="tab" data-tab="rec">Monthly<br>Packs${sv(56, 56, `<defs><linearGradient id="mtp" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#7be3b0"/><stop offset="1" stop-color="#11a05c"/></linearGradient></defs><rect x="11" y="14" width="34" height="31" rx="7" fill="url(#mtp)"/><path d="M11 23h34M20 10v7M36 10v7" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><text x="28" y="40" text-anchor="middle" font-family="Inter" font-weight="800" font-size="12" fill="#fff">30</text>`)}</button>
+        <button class="lk-tile" data-act="tab" data-tab="intl"><span>International<br>roaming</span>${sv(56, 56, `<defs><radialGradient id="glb" cx=".35" cy=".3" r=".8"><stop stop-color="#c9b8ff"/><stop offset="1" stop-color="#6a4df5"/></radialGradient></defs><circle cx="28" cy="28" r="20" fill="url(#glb)"/><path d="M8 28h40M28 8c6 6 6 34 0 40M28 8c-6 6-6 34 0 40M12 18h32M12 38h32" stroke="#fff" stroke-opacity=".55" stroke-width="1.4"/>`)}</button>
+        <button class="lk-tile" data-act="tab" data-tab="data"><span>Data<br>top-up</span>${sv(56, 56, `<defs><linearGradient id="dtp" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#7fb2ff"/><stop offset="1" stop-color="#2f6df6"/></linearGradient></defs><rect x="10" y="12" width="32" height="34" rx="8" fill="url(#dtp)"/><path d="M26 38V22m-6 6 6-6 6 6" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M46 20v-4M50 20v-8" stroke="#2f6df6" stroke-width="2.4" stroke-linecap="round"/>`)}</button>
+        <button class="lk-tile" data-act="tab" data-tab="rec"><span>Monthly<br>packs</span>${sv(56, 56, `<defs><linearGradient id="mtp" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#7be3b0"/><stop offset="1" stop-color="#11a05c"/></linearGradient></defs><rect x="11" y="14" width="34" height="31" rx="7" fill="url(#mtp)"/><path d="M11 23h34M20 10v7M36 10v7" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><text x="28" y="40" text-anchor="middle" font-family="Inter" font-weight="800" font-size="12" fill="#fff">30</text>`)}</button>
       </div>
       <button class="cta" data-act="tab" data-tab="data">Explore More Packs</button>
     </div>`;
@@ -121,8 +121,7 @@
       ${c.tag ? `<div class="tag ${c.tag[1]}">${c.tag[0]}</div>` : ''}
       <div class="stats">${[IC.wifi, IC.cal, IC.phone].map((ic, i) => `<div class="stat">${ic}<b>${c.stats[i]}</b><i>${labels[i]}</i></div>`).join('')}</div>
       ${c.band ? `<div class="band"><hr><span>${c.band}</span><hr></div>` : ''}
-      <div class="bens" style="top:${c.band ? 168 : 160}px">${bens}</div>
-      ${c.more ? `<div class="more"><button data-act="details">+${c.more.length} more benefits ${IC.caretD()}</button></div>` : ''}
+      <div class="bens" style="top:${c.band ? 178 : 154}px">${bens}${c.more ? `<div class="more"><button data-act="details">+${c.more.length} more benefits ${IC.caretD()}</button></div>` : ''}</div>
       <button class="cta" data-act="pay">${c.cta}</button>
     </div>`;
   }
