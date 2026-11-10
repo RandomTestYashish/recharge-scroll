@@ -342,7 +342,7 @@
       if (contacts[i].pad) { const w = clamp(1 - Math.abs(i - p + 1), 0, 1); y = lerp(y, 404.3, w); x = lerp(x, 72.1, w); }
       const cen = clamp(1 - Math.abs(i - p), 0, 1), isC = Math.round(p) === i;
       let o = clamp(1.7 - Math.abs(i - p) * .5, 0, 1) * clamp(intro * 1.7 - .35, 0, 1), rg = cen;
-      if (pk > 0) { if (isC) { x = lerp(x, 187.9, pk); y = lerp(y, 759.9, pk); s = lerp(s, 54, pk); rg = 1; } else o *= d1 * d1; }
+      if (pk > 0) { if (isC) { x = lerp(x, 189.1, pk); y = lerp(y, 780, pk); s = lerp(s, 54, pk); rg = 1; } else o *= d1 * d1; }
       el.style.transform = `translate(${x - s / 2}px, ${y - s / 2}px) scale(${s / 124})`;
       el.style.opacity = o; el.style.zIndex = Math.round(10 + cen * 10);
       el.children[0].style.opacity = 1 - rg; el.children[1].style.opacity = rg; el.children[2].style.opacity = rg;
