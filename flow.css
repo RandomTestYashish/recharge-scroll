@@ -54,7 +54,7 @@
 /* avatars */
 .av { position: absolute; left: 0; top: 0; width: 124px; height: 124px; border-radius: 50%; transform-origin: 0 0; will-change: transform, opacity; }
 .av-side { position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(#fff, #e6f0ff); box-shadow: 0 6px 16px rgba(60,90,150,.18); }
-.av-halo { position: absolute; inset: 0; border-radius: 50%; background: #fff; box-shadow: 0 14px 30px rgba(118,101,255,.28); }
+.av-halo { position: absolute; inset: 0; border-radius: 50%; background: #fff; box-shadow: 0 0 34px 8px rgba(118,101,255,.32); }
 .av-ring { position: absolute; inset: 0; border-radius: 50%; padding: 2px;
   background: conic-gradient(from 200deg, #8a63ff, #5b8cff 18%, #ffb03c 42%, #ff5a5f 62%, #c35cff 84%, #8a63ff);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }

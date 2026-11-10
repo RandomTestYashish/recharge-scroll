@@ -329,7 +329,7 @@
     // dial: ticks turn 22.5deg per contact
     const rot = -(p - 1) * 22.5;
     tc.style.transform = `rotate(${rot}deg)`;
-    dialEl.style.transform = `translate(${1.6 * pk}px, ${274 * pk + rise}px)`;
+    dialEl.style.transform = `translate(0px, ${274 * pk + rise}px)`;
     disc.style.opacity = inner.style.opacity = d1;
     dialBits.forEach(el => css(el, d1 * (el.matches('.hint, .go-label') ? clamp(1 - S.shut * 2, 0, 1) : 1), `translateY(${rise + 250 * pk}px)`));
     css(goBtn, d1 * clamp(1 - S.shut * 1.6, 0, 1), `translateY(${rise + 250 * pk}px) scale(${1 - S.shut * .35})`);
@@ -342,7 +342,7 @@
       if (contacts[i].pad) { const w = clamp(1 - Math.abs(i - p + 1), 0, 1); y = lerp(y, 404.3, w); x = lerp(x, 72.1, w); }
       const cen = clamp(1 - Math.abs(i - p), 0, 1), isC = Math.round(p) === i;
       let o = clamp(1.7 - Math.abs(i - p) * .5, 0, 1) * clamp(intro * 1.7 - .35, 0, 1), rg = cen;
-      if (pk > 0) { if (isC) { x = lerp(x, 189.1, pk); y = lerp(y, 780, pk); s = lerp(s, 54, pk); rg = 1; } else o *= d1 * d1; }
+      if (pk > 0) { if (isC) { x = lerp(x, 187.5, pk); y = lerp(y, 780, pk); s = lerp(s, 54, pk); rg = 1; } else o *= d1 * d1; }
       el.style.transform = `translate(${x - s / 2}px, ${y - s / 2}px) scale(${s / 124})`;
       el.style.opacity = o; el.style.zIndex = Math.round(10 + cen * 10);
       el.children[0].style.opacity = 1 - rg; el.children[1].style.opacity = rg; el.children[2].style.opacity = rg;
